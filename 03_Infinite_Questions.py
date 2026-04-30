@@ -73,37 +73,26 @@ class StartGame:
         self.entry_area_frame = Frame(self.start_frame)
         self.entry_area_frame.grid(row=3)
 
-        self.num_rounds_entry = Entry(self.entry_area_frame, font=("Arial", 20, "bold"),
-                                      width=10)
-        self.num_rounds_entry.grid(row=0, column=0, padx=5, pady=10)
-
-        self.play_button = Button(self.entry_area_frame, font=("Arial", 16, "bold"),
-                                  fg="#FFFFFF", bg="#0057D8", text="Play", width=12,
-                                  command=self.check_rounds)
-        self.play_button.grid(row=0, column=1, padx=5)
-
         self.infinite_mode_button = Button(self.entry_area_frame, font=("Arial", 16, "bold"),
                                   fg="#FFFFFF", bg="#E33C38", text="Infinite Mode! 🔥", width=25,
-                                  command=self.check_rounds)
+                                  command=self.infinite_mode)
 
-    def check_rounds(self):
+        self.infinite_mode_button.grid(row=1, column=0, pady=2, columnspan=2)
 
-        # Asks the user to see how many rounds they want to play. Tells them
-        # to enter a number larger than 0 if it's below.
+    def infinite_mode(self):
 
-        rounds_wanted = self.num_rounds_entry.get()
+        number_of_rounds = 999999999999999
 
         self.choose_label.config(fg="#009900", font=("Arial", 12, "bold"))
-        self.num_rounds_entry.config(bg="#FFFFFF")
 
         error = "Oops - Please choose a whole number more than zero."
         has_errors = "no"
 
         try:
-            rounds_wanted = int(rounds_wanted)
-            if rounds_wanted > 0:
+            number_of_rounds = int(number_of_rounds)
+            if number_of_rounds > 0:
 
-                Play(rounds_wanted)
+                Play(number_of_rounds, "yes")
                 root.withdraw()
 
             else:
@@ -115,12 +104,11 @@ class StartGame:
         if has_errors == "yes":
             self.choose_label.config(text=error, fg="#990000",
                                      font=("Arial", 10, "bold"))
-            self.num_rounds_entry.config(bg="#F4CCCC")
-            self.num_rounds_entry.delete(0, END)
+            self.infinite_mode_button.config(bg="#F4CCCC")
 
 class Play:
 
-    def __init__(self, how_many):
+    def __init__(self, how_many, infinite):
 
         # A lot of lists
 
@@ -140,6 +128,8 @@ class Play:
 
         self.game_frame = Frame(self.play_box)
         self.game_frame.grid(padx=10, pady=10)
+
+        self.infinite_mode_yn = infinite
 
         body_font = ("Arial", 12)
 
@@ -216,7 +206,13 @@ class Play:
 
         self.round_capital_list = get_round_capitals()
 
-        self.heading_label.config(text=f"Round {rounds_played} of {rounds_wanted}")
+        if self.infinite_mode_yn != "yes":
+
+            self.heading_label.config(text=f"Round {rounds_played} of {rounds_wanted}")
+
+        else:
+            self.heading_label.config(text=f"Round {rounds_played} of Infinite!")
+
         self.question_label.config(text=f"Chose the correct Capital",
                                  font=("Arial", 14, "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
@@ -272,7 +268,3 @@ if __name__ == "__main__":
     root.title("Capital Quiz")
     StartGame()
     root.mainloop()
-
-
-
-

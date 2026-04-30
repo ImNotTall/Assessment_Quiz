@@ -1,26 +1,24 @@
-import csv
 import random
 from tkinter import *
 from functools import partial  # To prevent unwanted windows
 
 def get_capitals():
 
-    file = open("00_Country_Capital_List.csv", "r")
-    all_capitals = list(csv.reader(file, delimiter=","))
-    file.close()
+    capitals = ["Wellington", "Canberra", "Washington D.C", "London", "Paris", "Beijing", "Tokyo", "Bangkok"]
 
-    all_capitals.pop(0)
+    random_capital = random.choice(capitals)
+    print(random_capital)
 
-    return all_capitals
+    return capitals
 
-def get_round_capitals():
+def round_capitals():
 
-    all_capital_list = get_capitals()
+    capitals_list = get_capitals()
 
     round_capitals = []
 
     while len(round_capitals) < 4:
-        potential_capital = random.choice(all_capital_list)
+        potential_capital = random.choice(capitals_list)
 
         if potential_capital not in round_capitals:
             round_capitals.append(potential_capital)
@@ -31,12 +29,6 @@ def get_round_capitals():
 
     return round_capitals
 
-def round_ans(val):
-
-    var_rounded = (val * 2 + 1) // 2
-    raw_rounded = "{:.0f}".format(var_rounded)
-    return int(raw_rounded)
-
 class StartGame:
 
     def __init__(self):
@@ -44,11 +36,7 @@ class StartGame:
         self.start_frame = Frame(padx=10, pady=10)
         self.start_frame.grid()
 
-        intro_string = ("Enter the number of round you would like to play. If you would like to try for a high "
-                        "score, press the infinite mode. Each round you will be given a random country then " 
-                        "you select from one of the four buttons what capital responds to said country.\n\n"
-
-                        "Your goal is to get as many countries correct and get the highest score possible. "
+        intro_string = (" Smaller Game to Check Points "
                         )
 
         choose_string = "How many rounds do you want to play?"
@@ -82,9 +70,6 @@ class StartGame:
                                   command=self.check_rounds)
         self.play_button.grid(row=0, column=1, padx=5)
 
-        self.infinite_mode_button = Button(self.entry_area_frame, font=("Arial", 16, "bold"),
-                                  fg="#FFFFFF", bg="#E33C38", text="Infinite Mode! 🔥", width=25,
-                                  command=self.check_rounds)
 
     def check_rounds(self):
 
@@ -166,7 +151,7 @@ class Play:
         self.results_label = play_labels_ref[3]
 
         self.capital_frame = Frame(self.game_frame)
-        self.capital_frame.grid(row=3)
+        self.capital_frame.grid(row=4)
 
         self.capital_button_ref = []
         self.button_capitals_list = []
@@ -182,7 +167,7 @@ class Play:
             self.capital_button_ref.append(self.capital_button)
 
         self.hints_stats_frame = Frame(self.game_frame)
-        self.hints_stats_frame.grid(row=6)
+        self.hints_stats_frame.grid(row=7)
 
         control_button_list = [
             [self.game_frame, "Next Round", "#0057D8", self.new_round, 21, 5, None],
@@ -196,7 +181,7 @@ class Play:
             make_control_button = Button(item[0], text=item[1], bg=item[2],
                                          command=item[3], font=("Arial", 16, "bold"),
                                          fg="#FFFFFF", width=item[4])
-            make_control_button.grid(row=item[5], column=item[6], padx=5, pady=5)
+            make_control_button.grid(row=item[5]+1, column=item[6], padx=5, pady=5)
 
             control_ref_list.append(make_control_button)
 
@@ -206,6 +191,10 @@ class Play:
 
         self.new_round()
 
+        self.score_label = Label(self.game_frame, text="Score: 0",
+                                 font=("Arial", 12, "bold"))
+        self.score_label.grid(row=5, pady=5)
+
     def new_round(self):
 
         rounds_played = self.rounds_played.get()
@@ -214,23 +203,23 @@ class Play:
 
         rounds_wanted = self.rounds_wanted.get()
 
-        self.round_capital_list = get_round_capitals()
+        self.round_capital_list = round_capitals()
 
         self.heading_label.config(text=f"Round {rounds_played} of {rounds_wanted}")
+
         self.question_label.config(text=f"Chose the correct Capital",
                                  font=("Arial", 14, "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
 
         self.correct_answer = random.choice(self.round_capital_list)
 
-        self.country_name_label.config(text=self.correct_answer[0])
+        self.country_name_label.config(text=self.correct_answer)
 
         for count, item in enumerate(self.capital_button_ref):
-            item.config(text=self.round_capital_list[count][1],
+            item.config(text=self.round_capital_list[count],
                         state=NORMAL)
 
             print(self.round_capital_list[count][1])
-
 
             self.next_button.config(state=DISABLED)
 
@@ -240,9 +229,10 @@ class Play:
 
         if selected == self.correct_answer:
             self.results_label.config(text="Correct! ✅", bg="#C6EFCE")
+            self.quiz_score.set(self.quiz_score.get() + 1)
         else:
             self.results_label.config(
-                text=f"Wrong ❌\nCorrect: {self.correct_answer[1]}",
+                text=f"Wrong ❌\nCorrect: {self.correct_answer}",
                 bg="#FFC7CE"
             )
 
@@ -262,6 +252,8 @@ class Play:
         for item in self.capital_button_ref:
             item.config(state=DISABLED)
 
+        self.score_label.config(text=f"Score: {self.quiz_score.get()}")
+
     def close_play(self):
 
         root.deiconify()
@@ -272,7 +264,3 @@ if __name__ == "__main__":
     root.title("Capital Quiz")
     StartGame()
     root.mainloop()
-
-
-
-

@@ -84,7 +84,8 @@ class StartGame:
 
         self.infinite_mode_button = Button(self.entry_area_frame, font=("Arial", 16, "bold"),
                                   fg="#FFFFFF", bg="#E33C38", text="Infinite Mode! 🔥", width=25,
-                                  command=self.check_rounds)
+                                  command=self.infinite_mode)
+        self.infinite_mode_button.grid(row=1, column=0, pady=2, columnspan=2)
 
     def check_rounds(self):
 
@@ -103,7 +104,7 @@ class StartGame:
             rounds_wanted = int(rounds_wanted)
             if rounds_wanted > 0:
 
-                Play(rounds_wanted)
+                Play(rounds_wanted, infinite=0)
                 root.withdraw()
 
             else:
@@ -118,9 +119,36 @@ class StartGame:
             self.num_rounds_entry.config(bg="#F4CCCC")
             self.num_rounds_entry.delete(0, END)
 
+    def infinite_mode(self):
+
+        number_of_rounds = 999999999999999
+
+        self.choose_label.config(fg="#009900", font=("Arial", 12, "bold"))
+
+        error = "Oops - Please choose a whole number more than zero."
+        has_errors = "no"
+
+        try:
+            number_of_rounds = int(number_of_rounds)
+            if number_of_rounds > 0:
+
+                Play(number_of_rounds, "yes")
+                root.withdraw()
+
+            else:
+                has_errors = "yes"
+
+        except ValueError:
+            has_errors = "yes"
+
+        if has_errors == "yes":
+            self.choose_label.config(text=error, fg="#990000",
+                                     font=("Arial", 10, "bold"))
+            self.infinite_mode_button.config(bg="#F4CCCC")
+
 class Play:
 
-    def __init__(self, how_many):
+    def __init__(self, how_many, infinite):
 
         # A lot of lists
 
@@ -140,6 +168,8 @@ class Play:
 
         self.game_frame = Frame(self.play_box)
         self.game_frame.grid(padx=10, pady=10)
+
+        self.infinite_mode_yn = infinite
 
         body_font = ("Arial", 12)
 
@@ -166,7 +196,7 @@ class Play:
         self.results_label = play_labels_ref[3]
 
         self.capital_frame = Frame(self.game_frame)
-        self.capital_frame.grid(row=3)
+        self.capital_frame.grid(row=4)
 
         self.capital_button_ref = []
         self.button_capitals_list = []
@@ -182,7 +212,7 @@ class Play:
             self.capital_button_ref.append(self.capital_button)
 
         self.hints_stats_frame = Frame(self.game_frame)
-        self.hints_stats_frame.grid(row=6)
+        self.hints_stats_frame.grid(row=7)
 
         control_button_list = [
             [self.game_frame, "Next Round", "#0057D8", self.new_round, 21, 5, None],
@@ -196,7 +226,7 @@ class Play:
             make_control_button = Button(item[0], text=item[1], bg=item[2],
                                          command=item[3], font=("Arial", 16, "bold"),
                                          fg="#FFFFFF", width=item[4])
-            make_control_button.grid(row=item[5], column=item[6], padx=5, pady=5)
+            make_control_button.grid(row=item[5]+1, column=item[6], padx=5, pady=5)
 
             control_ref_list.append(make_control_button)
 
@@ -205,6 +235,10 @@ class Play:
         self.end_game_button = control_ref_list[3]
 
         self.new_round()
+
+        self.score_label = Label(self.game_frame, text="Score: 0",
+                                 font=("Arial", 12, "bold"))
+        self.score_label.grid(row=5, pady=5)
 
     def new_round(self):
 
@@ -216,7 +250,13 @@ class Play:
 
         self.round_capital_list = get_round_capitals()
 
-        self.heading_label.config(text=f"Round {rounds_played} of {rounds_wanted}")
+        if self.infinite_mode_yn != "yes":
+
+            self.heading_label.config(text=f"Round {rounds_played} of {rounds_wanted}")
+
+        else:
+            self.heading_label.config(text=f"Round {rounds_played} of Infinite!")
+
         self.question_label.config(text=f"Chose the correct Capital",
                                  font=("Arial", 14, "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
@@ -231,7 +271,6 @@ class Play:
 
             print(self.round_capital_list[count][1])
 
-
             self.next_button.config(state=DISABLED)
 
     def round_results(self, user_choice):
@@ -240,6 +279,7 @@ class Play:
 
         if selected == self.correct_answer:
             self.results_label.config(text="Correct! ✅", bg="#C6EFCE")
+            self.quiz_score.set(self.quiz_score.get() + 1)
         else:
             self.results_label.config(
                 text=f"Wrong ❌\nCorrect: {self.correct_answer[1]}",
@@ -261,6 +301,8 @@ class Play:
 
         for item in self.capital_button_ref:
             item.config(state=DISABLED)
+
+        self.score_label.config(text=f"Score: {self.quiz_score.get()}")
 
     def close_play(self):
 
