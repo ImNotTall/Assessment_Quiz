@@ -31,12 +31,6 @@ def get_round_capitals():
 
     return round_capitals
 
-# def round_ans(val):
-#
-#     var_rounded = (val * 2 + 1) // 2
-#     raw_rounded = "{:.0f}".format(var_rounded)
-#     return int(raw_rounded)
-
 class StartGame:
 
     def __init__(self):
@@ -154,6 +148,9 @@ class Play:
 
         self.quiz_score = IntVar()
 
+        self.streak = IntVar()
+        self.best_streak = IntVar()
+
         self.rounds_played = IntVar()
         self.rounds_played.set(0)
 
@@ -218,7 +215,7 @@ class Play:
             [self.game_frame, "Next Round", "#0057D8", self.new_round, 21, 5, None],
             [self.hints_stats_frame, "Hints", "#FF8000", "", 10, 0, 0],
             [self.hints_stats_frame, "Stats", "#333333", "", 10, 0, 1],
-            [self.game_frame, "End", "#990000", self.close_play, 21, 7, None]
+            [self.game_frame, "End Game", "#990000", self.close_play, 21, 7, None]
         ]
 
         control_ref_list = []
@@ -257,7 +254,7 @@ class Play:
         else:
             self.heading_label.config(text=f"Round {rounds_played} of Infinite!")
 
-        self.question_label.config(text=f"Chose the correct Capital",
+        self.question_label.config(text=f"Choose the correct Capital",
                                  font=("Arial", 14, "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
 
@@ -265,9 +262,12 @@ class Play:
 
         self.country_name_label.config(text=self.correct_answer[0])
 
+        # Capital buttons after each round change back to original state
         for count, item in enumerate(self.capital_button_ref):
-            item.config(text=self.round_capital_list[count][1],
-                        state=NORMAL)
+            item.config(
+                text=self.round_capital_list[count][1],
+                state=NORMAL,
+                bg="#FFFFFF")
 
             print(self.round_capital_list[count][1])
 
@@ -277,19 +277,36 @@ class Play:
 
         selected = self.round_capital_list[user_choice]
 
+        for button in self.capital_button_ref:
+            button.config(state=DISABLED)
+
         if selected == self.correct_answer:
             self.results_label.config(text="Correct! ✅", bg="#C6EFCE")
             self.quiz_score.set(self.quiz_score.get() + 1)
+
+            self.streak.set(self.streak.get() + 1)
+
+            if self.streak.get() > self.best_streak.get():
+                self.best_streak.set(self.streak.get())
+
+            self.capital_button_ref[user_choice].config(bg="#35DB46")
+
         else:
             self.results_label.config(
                 text=f"Wrong ❌\nCorrect: {self.correct_answer[1]}",
                 bg="#FFC7CE"
             )
 
-        # Disable buttons after answering
-        for button in self.capital_button_ref:
-            button.config(state=DISABLED)
+            self.capital_button_ref[user_choice].config(bg="#E73C2F")
 
+            self.streak.set(0)
+
+            # Find and highlight correct answer green
+            for index, item in enumerate(self.round_capital_list):
+                if item == self.correct_answer:
+                    self.capital_button_ref[index].config(bg="#35DB46")
+
+        # Disable buttons after answering
         self.next_button.config(state=NORMAL)
 
         rounds_played = self.rounds_played.get()
@@ -304,10 +321,21 @@ class Play:
 
         self.score_label.config(text=f"Score: {self.quiz_score.get()}")
 
+
     def close_play(self):
 
         root.deiconify()
         self.play_box.destroy()
+
+class Stats:
+    def __init__(self, partner):
+
+        self.stats_box = Toplevel()
+
+    def close_stats(self):
+
+        root.deiconify()
+        self.stats_box.destroy()
 
 if __name__ == "__main__":
     root = Tk()
