@@ -157,6 +157,8 @@ class Play:
         self.rounds_wanted = IntVar()
         self.rounds_wanted.set(how_many)
 
+        self.rounds_won = IntVar()
+
         self.round_capital_list = []
         self.all_scores_list = []
         self.all_medians_list = []
@@ -213,8 +215,8 @@ class Play:
 
         control_button_list = [
             [self.game_frame, "Next Round", "#0057D8", self.new_round, 21, 5, None],
-            [self.hints_stats_frame, "Hints", "#FF8000", "", 10, 0, 0],
-            [self.hints_stats_frame, "Stats", "#333333", "", 10, 0, 1],
+            [self.hints_stats_frame, "Hints", "#FF8000", self.to_hints, 10, 0, 0],
+            [self.hints_stats_frame, "Stats", "#333333", self.to_stats, 10, 0, 1],
             [self.game_frame, "End Game", "#990000", self.close_play, 21, 7, None]
         ]
 
@@ -228,6 +230,7 @@ class Play:
             control_ref_list.append(make_control_button)
 
         self.next_button = control_ref_list[0]
+        self.hints_button = control_ref_list[1]
         self.stats_button = control_ref_list[2]
         self.end_game_button = control_ref_list[3]
 
@@ -321,21 +324,135 @@ class Play:
 
         self.score_label.config(text=f"Score: {self.quiz_score.get()}")
 
-
     def close_play(self):
 
         root.deiconify()
         self.play_box.destroy()
 
+    def to_hints(self):
+
+        print(self.correct_answer)
+
+        Hints(self, self.correct_answer)
+
+    def to_stats(self):
+
+        rounds_won = self.rounds_won.get()
+        stats_bundle = [rounds_won, self.all_scores_list]
+
+        Stats(self, stats_bundle)
+
 class Stats:
-    def __init__(self, partner):
+    def __init__(self, partner, all_stats_info):
+
+        rounds_won = all_stats_info[0]
+        user_scores = all_stats_info[1]
+
+        user_scores.sort()
 
         self.stats_box = Toplevel()
 
-    def close_stats(self):
+        partner.stats_button.config(state=DISABLED)
 
-        root.deiconify()
+        # If users press cross at top, closes help and
+        # 'releases' help button
+        self.stats_box.protocol('WM_DELETE_WINDOW',
+                                partial(self.close_stats, partner))
+
+        self.stats_frame = Frame(self.stats_box, width=350)
+        self.stats_frame.grid()
+
+        rounds_played = len(user_scores)
+
+        success_rate = rounds_won / rounds_played * 100
+        total_score = sum(user_scores)
+
+        success_string = (f"Success Rate: {rounds_won} / {rounds_played}"
+                          f" ({success_rate:.0f}%)")
+        total_score_string = f"Total Score: {total_score}"
+
+        heading_font = ("Arial", "16", "bold")
+        normal_font = ("Arial", "14")
+        comment_font = ("Arial", "13")
+
+        all_stats_strings = [
+            ["Statistics", heading_font, ""],
+            [success_string, normal_font, "W"],
+            [total_score_string, normal_font, "W"],
+            ["\nRound Stats", heading_font, ""],
+        ]
+
+        stats_label_ref_list = []
+        for count, item in enumerate(all_stats_strings):
+            self.stats_label = Label(self.stats_frame, text=item[0], font=item[1], wraplength=300,
+                                     anchor="w", justify="left",
+                                     padx=30, pady=5)
+            self.stats_label.grid(row=count, sticky=item[2], padx=10)
+            stats_label_ref_list.append(self.stats_label)
+
+        self.dismiss_button = Button(self.stats_frame,
+                                     font=("Arial", 16, "bold"),
+                                     text="Dismiss", bg="#333333",
+                                     fg="#FFFFFF", width=20,
+                                     command=partial(self.close_stats,
+                                                     partner))
+        self.dismiss_button.grid(row=8, padx=10, pady=10)
+
+    def close_stats(self, partner):
+        # Put help button back to normal...
+        partner.stats_button.config(state=NORMAL)
         self.stats_box.destroy()
+
+class Hints:
+
+    def __init__(self, partner, first_letter_hint):
+        background = "#ffe6cc"
+        self.help_box = Toplevel()
+
+        # disable help button
+        partner.hints_button.config(state=DISABLED)
+
+        self.correct_answer = first_letter_hint
+
+        # If users press cross at top, closes help and
+        # 'releases' help button
+        self.help_box.protocol('WM_DELETE_WINDOW',
+                               partial(self.close_hints, partner))
+
+        self.help_frame = Frame(self.help_box, width=300,
+                                height=200,
+                                bg=background)
+        self.help_frame.grid(padx=25, pady=30)
+
+        self.help_heading_label = Label(self.help_frame,
+                                        bg=background,
+                                        text="Hints",
+                                        font=("Arial", 14, "bold"),
+                                        padx=30, pady=30)
+
+        self.help_heading_label.grid(row=0)
+
+        help_text = f"{self.correct_answer[1][0]}"
+
+        self.help_text_label = Label(self.help_frame, bg=background,
+                                     text=help_text, wraplength=350,
+                                     justify="left")
+        self.help_text_label.grid(row=1, padx=10)
+
+        self.dismiss_button = Button(self.help_frame,
+                                     font=("Arial", 12, "bold"),
+                                     text="Dismiss", bg="#CC6600",
+                                     fg="#FFFFFF",
+                                     command=partial(self.close_hints,
+                                                     partner))
+        self.dismiss_button.grid(row=2, padx=30, pady=30)
+
+        # closes help dialogue (used by button and x at top of dialogue)
+
+    def close_hints(self, partner):
+        # Put help button back to normal...
+        partner.hints_button.config(state=NORMAL)
+        self.help_box.destroy()
 
 if __name__ == "__main__":
     root = Tk()
