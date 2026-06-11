@@ -280,6 +280,8 @@ class Play:
 
         selected = self.round_capital_list[user_choice]
 
+        rounds_won = self.rounds_won.get()
+
         for button in self.capital_button_ref:
             button.config(state=DISABLED)
 
@@ -294,6 +296,9 @@ class Play:
 
             self.capital_button_ref[user_choice].config(bg="#35DB46")
 
+            rounds_won += 1
+            self.rounds_won.set(rounds_won)
+
         else:
             self.results_label.config(
                 text=f"Wrong ❌\nCorrect: {self.correct_answer[1]}",
@@ -304,7 +309,7 @@ class Play:
 
             self.streak.set(0)
 
-            # Find and highlight correct answer green
+            # Find and highlight correct answer in green
             for index, item in enumerate(self.round_capital_list):
                 if item == self.correct_answer:
                     self.capital_button_ref[index].config(bg="#35DB46")
@@ -338,7 +343,10 @@ class Play:
     def to_stats(self):
 
         rounds_won = self.rounds_won.get()
-        stats_bundle = [rounds_won, self.all_scores_list]
+        rounds_played = self.rounds_played.get()
+        streak_amount = self.best_streak.get()
+
+        stats_bundle = [rounds_won, rounds_played, streak_amount]
 
         Stats(self, stats_bundle)
 
@@ -347,8 +355,9 @@ class Stats:
 
         rounds_won = all_stats_info[0]
         user_scores = all_stats_info[1]
+        streak_amount = all_stats_info[2]
 
-        user_scores.sort()
+        # user_scores.sort()
 
         self.stats_box = Toplevel()
 
@@ -362,23 +371,27 @@ class Stats:
         self.stats_frame = Frame(self.stats_box, width=350)
         self.stats_frame.grid()
 
-        rounds_played = len(user_scores)
+        rounds_played = user_scores
 
         success_rate = rounds_won / rounds_played * 100
-        total_score = sum(user_scores)
+        total_score = rounds_won
 
+        print(rounds_won, rounds_played)
         success_string = (f"Success Rate: {rounds_won} / {rounds_played}"
                           f" ({success_rate:.0f}%)")
+
         total_score_string = f"Total Score: {total_score}"
+
+        streak_amount_string = f"Game Streak: {streak_amount}"
 
         heading_font = ("Arial", "16", "bold")
         normal_font = ("Arial", "14")
-        comment_font = ("Arial", "13")
 
         all_stats_strings = [
             ["Statistics", heading_font, ""],
             [success_string, normal_font, "W"],
             [total_score_string, normal_font, "W"],
+            [streak_amount_string, normal_font, "W"],
             ["\nRound Stats", heading_font, ""],
         ]
 
@@ -422,21 +435,28 @@ class Hints:
         self.help_frame = Frame(self.help_box, width=300,
                                 height=200,
                                 bg=background)
-        self.help_frame.grid(padx=25, pady=30)
+        self.help_frame.grid(padx=0, pady=0)
 
         self.help_heading_label = Label(self.help_frame,
                                         bg=background,
                                         text="Hints",
                                         font=("Arial", 14, "bold"),
                                         padx=30, pady=30)
-
         self.help_heading_label.grid(row=0)
 
-        help_text = f"{self.correct_answer[1][0]}"
+        if int(self.correct_answer[4]) > 6:
+            help_text = "The Capital is MORE than 3 letters long!"
+
+        elif int(self.correct_answer[4]) < 6:
+            help_text = "The Capital is LESS than 6 letters long!"
+
+        else:
+            help_text = "The Capital is MORE than 4 but LESS than 8"
 
         self.help_text_label = Label(self.help_frame, bg=background,
                                      text=help_text, wraplength=350,
-                                     justify="left")
+                                     justify="left",
+                                     font=("Arial", 20))
         self.help_text_label.grid(row=1, padx=10)
 
         self.dismiss_button = Button(self.help_frame,
