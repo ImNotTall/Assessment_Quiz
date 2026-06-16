@@ -25,11 +25,25 @@ def get_round_capitals():
         if potential_capital not in round_capitals:
             round_capitals.append(potential_capital)
 
-    # Trial this. It shuffles the round capitals.
+    # shuffles the round capitals
 
     random.shuffle(round_capitals)
 
-    return round_capitals
+    capital_length = [len(item[1]) for item in round_capitals]
+
+    capital_length.sort()
+    median = (capital_length[1] + capital_length[2]) / 2
+    median = round_ans(median)
+
+    return round_capitals, median
+
+def round_ans(val):
+
+    # Rounds numbers to nearest integer
+
+    var_rounded = (val * 2 + 1) // 2
+    raw_rounded = "{:.0f}".format(var_rounded)
+    return int(raw_rounded)
 
 class StartGame:
 
@@ -144,7 +158,7 @@ class Play:
 
     def __init__(self, how_many, infinite):
 
-        # A lot of lists
+        # Lists to store everything for later use
 
         self.quiz_score = IntVar()
 
@@ -160,8 +174,6 @@ class Play:
         self.rounds_won = IntVar()
 
         self.round_capital_list = []
-        self.all_scores_list = []
-        self.all_medians_list = []
 
         self.play_box = Toplevel()
 
@@ -177,13 +189,13 @@ class Play:
         play_labels_list = [
             ["Round # of #", ("Arial", 16, "bold"), None, 0],
             ["What is the Country Capital of: ", body_font, "#24bf2a", 1],
-            ["'Country'", body_font, "#6599EC", 2],
+            ["'Country'", ("Arial", 18, "bold"), "#6599EC", 2],
             ["Capital", body_font, "#ABABAB", 3]
         ]
 
         play_labels_ref = []
         for item in play_labels_list:
-            self.make_label = Label(self.game_frame, text=item[0], font=item[1],
+            self.make_label = Label(self.game_frame, text=item[0] , font=item[1],
                                     bg=item[2], wraplength=300, justify="left")
             self.make_label.grid(row=item[3], pady=10, padx=10)
 
@@ -202,7 +214,7 @@ class Play:
 
         for item in range(0, 4):
             self.capital_button = Button(self.capital_frame, font=("Arial", 12),
-                                         text="Capital Name", width=15,
+                                         text=f"Capital Name", width=15,
                                          command=partial(self.round_results, item))
             self.capital_button.grid(row=item // 2,
                                      column=item % 2,
@@ -248,7 +260,7 @@ class Play:
 
         rounds_wanted = self.rounds_wanted.get()
 
-        self.round_capital_list = get_round_capitals()
+        self.round_capital_list, self.median = get_round_capitals()
 
         if self.infinite_mode_yn != "yes":
 
@@ -257,8 +269,8 @@ class Play:
         else:
             self.heading_label.config(text=f"Round {rounds_played} of Infinite!")
 
-        self.question_label.config(text=f"Choose the correct Capital",
-                                 font=("Arial", 14, "bold"))
+        self.question_label.config(text=f"Choose the Correct Capital of:",
+                                 font=("Arial", 10, "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
 
         self.correct_answer = random.choice(self.round_capital_list)
@@ -268,7 +280,7 @@ class Play:
         # Capital buttons after each round change back to original state
         for count, item in enumerate(self.capital_button_ref):
             item.config(
-                text=self.round_capital_list[count][1],
+                text=f"{self.round_capital_list[count][1]} [{self.round_capital_list[count][4]}]",
                 state=NORMAL,
                 bg="#FFFFFF")
 
@@ -336,9 +348,10 @@ class Play:
 
     def to_hints(self):
 
-        print(self.correct_answer)
+        print("correct answer:", self.correct_answer)
+        print("round capital list: ", self.round_capital_list)
 
-        Hints(self, self.correct_answer)
+        Hints(self, self.correct_answer, self.median)
 
     def to_stats(self):
 
@@ -382,7 +395,7 @@ class Stats:
 
         total_score_string = f"Total Score: {total_score}"
 
-        streak_amount_string = f"Game Streak: {streak_amount}"
+        streak_amount_string = f"Best Streak: {streak_amount}"
 
         heading_font = ("Arial", "16", "bold")
         normal_font = ("Arial", "14")
@@ -418,7 +431,7 @@ class Stats:
 
 class Hints:
 
-    def __init__(self, partner, first_letter_hint):
+    def __init__(self, partner, first_letter_hint, median):
         background = "#ffe6cc"
         self.help_box = Toplevel()
 
@@ -426,6 +439,7 @@ class Hints:
         partner.hints_button.config(state=DISABLED)
 
         self.correct_answer = first_letter_hint
+        self.median = median
 
         # If users press cross at top, closes help and
         # 'releases' help button
@@ -444,14 +458,16 @@ class Hints:
                                         padx=30, pady=30)
         self.help_heading_label.grid(row=0)
 
-        if int(self.correct_answer[4]) > 6:
-            help_text = "The Capital is MORE than 3 letters long!"
+        capital_length = len(self.correct_answer[1])
 
-        elif int(self.correct_answer[4]) < 6:
-            help_text = "The Capital is LESS than 6 letters long!"
+        if capital_length > self.median:
+            help_text = f"The capital is more than {median} letters long!"
+
+        elif capital_length < self.median:
+            help_text = f"The Capital is LESS than {median} letters long!"
 
         else:
-            help_text = "The Capital is MORE than 4 but LESS than 8"
+            help_text = "The Capital is MORE than 4 but LESS than 8 letters long!"
 
         self.help_text_label = Label(self.help_frame, bg=background,
                                      text=help_text, wraplength=350,
