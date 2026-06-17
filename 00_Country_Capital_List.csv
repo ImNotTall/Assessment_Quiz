@@ -1,0 +1,198 @@
+Country,Capital,ISO Code (3 letters),ISO Code (2 letters),capital length
+Afghanistan,Kabul,AFG,AF,5
+Albania,Tirana,ALB,AL,6
+Algeria,Algiers,DZA,DZ,7
+Andorra,Andorra la Vella,AND,AD,16
+Angola,Luanda,AGO,AO,6
+Antigua and Barbuda,St. John's,ATG,AG,10
+Argentina,Buenos Aires,ARG,AR,12
+Armenia,Yerevan,ARM,AM,7
+Australia,Canberra,AUS,AU,8
+Austria,Vienna,AUT,AT,6
+Azerbaijan,Baku,AZE,AZ,4
+Bahamas,Nassau,BHS,BS,6
+Bahrain,Manama,BHR,BH,6
+Bangladesh,Dhaka,BGD,BD,5
+Barbados,Bridgetown,BRB,BB,10
+Belarus,Minsk,BLR,BY,5
+Belgium,Brussels,BEL,BE,8
+Belize,Belmopan,BLZ,BZ,8
+Benin,Porto Novo,BEN,BJ,10
+Bhutan,Thimphu,BTN,BT,7
+Bolivia,Sucre,BOL,BO,5
+Bosnia and Herzegovina,Sarajevo,BIH,BA,8
+Botswana,Gaborone,BWA,BW,8
+Brazil,Brasilia,BRA,BR,8
+Brunei,Bandar Seri Begawan,BRN,BN,19
+Bulgaria,Sofia,BGR,BG,5
+Burkina Faso,Ouagadougou,BFA,BF,11
+Burundi,Bujumbura,BDI,BI,9
+Cambodia,Phnom Penh,KHM,KH,10
+Cameroon,Yaoundé,CMR,CM,7
+Canada,Ottawa,CAN,CA,6
+Cape Verde,Praia,CPV,CV,5
+Central African Republic,Bangui,CAF,CF,6
+Chad,N'Djamena,TCD,TD,9
+Chile,Santiago,CHL,CL,8
+China,Beijing,CHN,CN,7
+Colombia,Bogota,COL,CO,6
+Comoros,Moroni,COM,KM,6
+Costa Rica,San José,CRI,CR,8
+Croatia,Zagreb,HRV,HR,6
+Cuba,Havana,CUB,CU,6
+Cyprus,Nicosia,CYP,CY,7
+Czech Republic,Prague,CZE,CZ,6
+Democratic Republic of Congo,Kinshasa,COD,CD,8
+Denmark,Copenhagen,DNK,DK,10
+Djibouti,Djibouti,DJI,DJ,8
+Dominica,Roseau,DMA,DM,6
+Dominican Republic,Santo Domingo,DOM,DO,13
+East Timor,Dili,TLS,TL,4
+Ecuador,Quito,ECU,EC,5
+Egypt,Cairo,EGY,EG,5
+El Salvador,San Salvador,SLV,SV,12
+Equatorial Guinea,Malabo,GNQ,GQ,6
+Eritrea,Asmara,ERI,ER,6
+Estonia,Tallinn,EST,EE,7
+Eswatini,Mbabane,SWZ,SZ,7
+Ethiopia,Addis Ababa,ETH,ET,11
+Fiji,Suva,FJI,FJ,4
+Finland,Helsinki,FIN,FI,8
+France,Paris,FRA,FR,5
+Gabon,Libreville,GAB,GA,10
+Gambia,Banjul,GMB,GM,6
+Georgia,Tbilisi,GEO,GE,7
+Germany,Berlin,DEU,DE,6
+Ghana,Accra,GHA,GH,5
+Greece,Athens,GRC,GR,6
+Grenada,St. George's,GRD,GD,12
+Guatemala,Guatemala City,GTM,GT,14
+Guinea,Conakry,GIN,GN,7
+Guinea-Bissau,Bissau,GNB,GW,6
+Guyana,Georgetown,GUY,GY,10
+Haiti,Port-au-Prince,HTI,HT,14
+Honduras,Tegucigalpa,HND,HN,11
+Hungary,Budapest,HUN,HU,8
+Iceland,Reykjaví­k,ISL,IS,10
+India,New Delhi,IND,IN,9
+Indonesia,Jakarta,IDN,ID,7
+Iran,Tehran,IRN,IR,6
+Iraq,Baghdad,IRQ,IQ,7
+Ireland,Dublin,IRL,IE,6
+Israel,Jerusalem,ISR,IL,9
+Italy,Rome,ITA,IT,4
+Ivory Coast,Yamoussoukro,CIV,CI,12
+Jamaica,Kingston,JAM,JM,8
+Japan,Tokyo,JPN,JP,5
+Jordan,Amman,JOR,JO,5
+Kazakhstan,Astana,KAZ,KZ,6
+Kenya,Nairobi,KEN,KE,7
+Kiribati,Tarawa,KIR,KI,6
+"Korea, North",Pyongyang,PRK,KP,9
+"Korea, South",Seoul,KOR,KR,5
+Kosovo,Pristina,-,-,8
+Kuwait,Kuwait City,KWT,KW,11
+Kyrgyzstan,Bishkek,KGZ,KG,7
+Laos,Vientiane,LAO,LA,9
+Latvia,Riga,LVA,LV,4
+Lebanon,Beirut,LBN,LB,6
+Lesotho,Maseru,LSO,LS,6
+Liberia,Monrovia,LBR,LR,8
+Libya,Tripoli,LBY,LY,7
+Liechtenstein,Vaduz,LIE,LI,5
+Lithuania,Vilnius,LTU,LT,7
+Luxembourg,Luxembourg,LUX,LU,10
+Madagascar,Antananarivo,MDG,MG,12
+Malawi,Lilongwe,MWI,MW,8
+Malaysia,Kuala Lumpur,MYS,MY,12
+Maldives,Malé,MDV,MV,4
+Mali,Bamako,MLI,ML,6
+Malta,Valletta,MLT,MT,8
+Marshall Islands,Majuro,MHL,MH,6
+Mauritania,Nouakchott,MRT,MR,10
+Mauritius,Port Louis,MUS,MU,10
+Mexico,Mexico City,MEX,MX,11
+Micronesia,Palikir,FSM,FM,7
+Moldova,Chisinau,MDA,MD,8
+Monaco,Monaco,MCO,MC,6
+Mongolia,Ulaanbaatar,MNG,MN,11
+Montenegro,Podgorica,MNE,ME,9
+Morocco,Rabat,MAR,MA,5
+Mozambique,Maputo,MOZ,MZ,6
+Myanmar,Naypyidaw,MMR,MM,9
+Namibia,Windhoek,NAM,NA,8
+Nauru,Yaren,NRU,NR,5
+Nepal,Kathmandu,NPL,NP,9
+Netherlands,Amsterdam,NLD,NL,9
+New Zealand,Wellington,NZL,NZ,10
+Nicaragua,Managua,NIC,NI,7
+Niger,Niamey,NER,NE,6
+Nigeria,Abuja,NGA,NG,5
+North Macedonia,Skopje,MKD,MK,6
+Norway,Oslo,NOR,NO,4
+Oman,Muscat,OMN,OM,6
+Pakistan,Islamabad,PAK,PK,9
+Palau,Melekeok,PLW,PW,8
+Palestine,East Jerusalem,PSE,PS,14
+Panama,Panama City,PAN,PA,11
+Papua New Guinea,Port Moresby,PNG,PG,12
+Paraguay,Asunción,PRY,PY,8
+Peru,Lima,PER,PE,4
+Philippines,Manila,PHL,PH,6
+Poland,Warsaw,POL,PL,6
+Portugal,Lisbon,PRT,PT,6
+Qatar,Doha,QAT,QA,4
+Republic of the Congo,Brazzaville,COG,CG,11
+Romania,Bucharest,ROU,RO,9
+Russia,Moscow,RUS,RU,6
+Rwanda,Kigali,RWA,RW,6
+Saint Kitts and Nevis,Basseterre,KNA,KN,10
+Saint Lucia,Castries,LCA,LC,8
+Saint Vincent and the Grenadines,Kingstown,VCT,VC,9
+Samoa,Apia,WSM,WS,4
+San Marino,San Marino,SMR,SM,10
+São Tomé and Prí­ncipe,São Tomé,STP,ST,8
+Saudi Arabia,Riyadh,SAU,SA,6
+Senegal,Dakar,SEN,SN,5
+Serbia,Belgrade,SRB,RS,8
+Seychelles,Victoria,SYC,SC,8
+Sierra Leone,Freetown,SLE,SL,8
+Singapore,Singapore,SGP,SG,9
+Slovakia,Bratislava,SVK,SK,10
+Slovenia,Ljubljana,SVN,SI,9
+Solomon Islands,Honiara,SLB,SB,7
+Somalia,Mogadishu,SOM,SO,9
+South Africa,Pretoria,ZAF,ZA,8
+South Sudan,Juba,SSD,SS,4
+Spain,Madrid,ESP,ES,6
+Sri Lanka,Sri Jayawardenapura Kotte,LKA,LK,25
+Sudan,Khartoum,SDN,SD,8
+Suriname,Paramaribo,SUR,SR,10
+Sweden,Stockholm,SWE,SE,9
+Switzerland,Bern,CHE,CH,4
+Syria,Damascus,SYR,SY,8
+Taiwan,Taipei,TWN,TW,6
+Tajikistan,Dushanbe,TJK,TJ,8
+Tanzania,Dodoma,TZA,TZ,6
+Thailand,Bangkok,THA,TH,7
+Togo,Lomé,TGO,TG,4
+Tonga,Nukualofa,TON,TO,9
+Trinidad and Tobago,Port of Spain,TTO,TT,13
+Tunisia,Tunis,TUN,TN,5
+Turkey,Ankara,TUR,TR,6
+Turkmenistan,Ashgabat,TKM,TM,8
+Tuvalu,Funafuti,TUV,TV,8
+Uganda,Kampala,UGA,UG,7
+Ukraine,Kiev,UKR,UA,4
+United Arab Emirates,Abu Dhabi,ARE,AE,9
+United Kingdom,London,GBR,GB,6
+United States,Washington D.C.,USA,US,15
+Uruguay,Montevideo,URY,UY,10
+Uzbekistan,Tashkent,UZB,UZ,8
+Vanuatu,Port Vila,VUT,VU,9
+Vatican City,Vatican City,VAT,VA,12
+Venezuela,Caracas,VEN,VE,7
+Vietnam,Hanoi,VNM,VN,5
+Yemen,Sana'a,YEM,YE,6
+Zambia,Lusaka,ZMB,ZM,6
+Zimbabwe,Harare,ZWE,ZW,6
