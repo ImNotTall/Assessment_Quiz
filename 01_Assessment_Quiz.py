@@ -454,7 +454,7 @@ class Hints:
         self.help_heading_label = Label(self.help_frame,
                                         bg=background,
                                         text="Hints",
-                                        font=("Arial", 14, "bold"),
+                                        # font=("Arial", 14, "bold"),
                                         padx=30, pady=30)
         self.help_heading_label.grid(row=0)
 
