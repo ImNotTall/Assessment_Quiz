@@ -1,9 +1,11 @@
+# imports from outside main python
 import csv
 import random
 from tkinter import *
 from functools import partial  # To prevent unwanted windows
 
 def get_capitals():
+    # retrieves capital data from csv file
 
     file = open("00_Country_Capital_List.csv", "r")
     all_capitals = list(csv.reader(file, delimiter=","))
@@ -31,6 +33,7 @@ def get_round_capitals():
 
     capital_length = [len(item[1]) for item in round_capitals]
 
+    # finds median for later use in stats
     capital_length.sort()
     median = (capital_length[1] + capital_length[2]) / 2
     median = round_ans(median)
@@ -52,11 +55,14 @@ class StartGame:
         self.start_frame = Frame(padx=10, pady=10)
         self.start_frame.grid()
 
+        # introduction to how to play the game
+
         intro_string = ("Enter the number of round you would like to play. If you would like to try for a high "
                         "score, press the infinite mode. Each round you will be given a random country then " 
                         "you select from one of the four buttons what capital responds to said country.\n\n"
 
-                        "Your goal is to get as many countries correct and get the highest score possible. "
+                        "Your goal is to get as many countries correct and get the highest score possible.\n\n"
+                        "Use the 'Hints' and 'Stats' located under the question choices."
                         )
 
         choose_string = "How many rounds do you want to play?"
@@ -75,6 +81,8 @@ class StartGame:
             make_label.grid(row=count)
 
             start_label_ref.append(make_label)
+
+        # code buttons and "number enterer"
 
         self.choose_label = start_label_ref[2]
 
@@ -128,6 +136,9 @@ class StartGame:
             self.num_rounds_entry.delete(0, END)
 
     def infinite_mode(self):
+
+        # sets number of rounds to a large number to make it
+        # seem like its infinite
 
         number_of_rounds = 999999999999999
 
@@ -212,6 +223,8 @@ class Play:
         self.capital_button_ref = []
         self.button_capitals_list = []
 
+        # Area for capital names and lengths
+
         for item in range(0, 4):
             self.capital_button = Button(self.capital_frame, font=("Arial", 12),
                                          text=f"Capital Name", width=15,
@@ -224,6 +237,8 @@ class Play:
 
         self.hints_stats_frame = Frame(self.game_frame)
         self.hints_stats_frame.grid(row=7)
+
+        # buttons of main play screen
 
         control_button_list = [
             [self.game_frame, "Next Round", "#0057D8", self.new_round, 21, 5, None],
@@ -254,6 +269,8 @@ class Play:
 
     def new_round(self):
 
+        # creates new question when next round starts
+
         rounds_played = self.rounds_played.get()
         rounds_played += 1
         self.rounds_played.set(rounds_played)
@@ -261,6 +278,8 @@ class Play:
         rounds_wanted = self.rounds_wanted.get()
 
         self.round_capital_list, self.median = get_round_capitals()
+
+        # changes the amount of rounds at top of screen depending on what mode
 
         if self.infinite_mode_yn != "yes":
 
@@ -272,6 +291,8 @@ class Play:
         self.question_label.config(text=f"Choose the Correct Capital of:",
                                  font=("Arial", 10, "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
+
+        # checks for correct capital selected
 
         self.correct_answer = random.choice(self.round_capital_list)
 
@@ -290,12 +311,16 @@ class Play:
 
     def round_results(self, user_choice):
 
+        # displays information after round
+
         selected = self.round_capital_list[user_choice]
 
         rounds_won = self.rounds_won.get()
 
         for button in self.capital_button_ref:
             button.config(state=DISABLED)
+
+        # if user answer is correct changes selected answer green
 
         if selected == self.correct_answer:
             self.results_label.config(text="Correct! ✅", bg="#C6EFCE")
@@ -310,6 +335,9 @@ class Play:
 
             rounds_won += 1
             self.rounds_won.set(rounds_won)
+
+        # if user answer is wrong changes selected answer red and correct
+        # answer green
 
         else:
             self.results_label.config(
@@ -332,6 +360,8 @@ class Play:
         rounds_played = self.rounds_played.get()
         rounds_wanted = self.rounds_wanted.get()
 
+        # ends game if number of rounds is equal to number of rounds selected
+
         if rounds_played == rounds_wanted:
             self.next_button.config(state=DISABLED, text="Game Over")
             self.end_game_button.config(text="Play Again", bg="#006600")
@@ -339,12 +369,16 @@ class Play:
         for item in self.capital_button_ref:
             item.config(state=DISABLED)
 
+        # updates score for each round
+
         self.score_label.config(text=f"Score: {self.quiz_score.get()}")
 
     def close_play(self):
 
         root.deiconify()
         self.play_box.destroy()
+
+    # gets variables ready to be transferred into next class
 
     def to_hints(self):
 
@@ -366,18 +400,19 @@ class Play:
 class Stats:
     def __init__(self, partner, all_stats_info):
 
+        # calculates stats from users choices
+
         rounds_won = all_stats_info[0]
         user_scores = all_stats_info[1]
         streak_amount = all_stats_info[2]
-
-        # user_scores.sort()
 
         self.stats_box = Toplevel()
 
         partner.stats_button.config(state=DISABLED)
 
-        # If users press cross at top, closes help and
-        # 'releases' help button
+        # if users press cross at top closes stats and
+        # 'releases' stats button
+
         self.stats_box.protocol('WM_DELETE_WINDOW',
                                 partial(self.close_stats, partner))
 
@@ -386,12 +421,15 @@ class Stats:
 
         rounds_played = user_scores
 
+        # calculates success rate between rounds
+
         success_rate = rounds_won / rounds_played * 100
         total_score = rounds_won
 
-        print(rounds_won, rounds_played)
         success_string = (f"Success Rate: {rounds_won} / {rounds_played}"
                           f" ({success_rate:.0f}%)")
+
+        # calculates total score of rounds won and best streak
 
         total_score_string = f"Total Score: {total_score}"
 
@@ -407,6 +445,8 @@ class Stats:
             [streak_amount_string, normal_font, "W"],
             ["\nRound Stats", heading_font, ""],
         ]
+
+        # code for displaying all stats
 
         stats_label_ref_list = []
         for count, item in enumerate(all_stats_strings):
@@ -435,13 +475,15 @@ class Hints:
         background = "#ffe6cc"
         self.help_box = Toplevel()
 
+        # displays median number of letters each capital has per round for hint
+
         # disable help button
         partner.hints_button.config(state=DISABLED)
 
         self.correct_answer = first_letter_hint
         self.median = median
 
-        # If users press cross at top, closes help and
+        # if users press cross at top closes help and
         # 'releases' help button
         self.help_box.protocol('WM_DELETE_WINDOW',
                                partial(self.close_hints, partner))
@@ -453,21 +495,21 @@ class Hints:
 
         self.help_heading_label = Label(self.help_frame,
                                         bg=background,
-                                        text="Hints",
-                                        # font=("Arial", 14, "bold"),
+                                        text="Hint",
+                                        font=("Arial", 14, "bold"),
                                         padx=30, pady=30)
         self.help_heading_label.grid(row=0)
 
         capital_length = len(self.correct_answer[1])
 
-        if capital_length > self.median:
-            help_text = f"The capital is more than {median} letters long!"
+        # compares the correct answer length to overall median length and displays something different
+        #depending on much smaller or larger it is
 
-        elif capital_length < self.median:
-            help_text = f"The Capital is LESS than {median} letters long!"
+        if capital_length >= self.median:
+            help_text = f"The capital is at LEAST / MORE than {median} letters long!"
 
-        else:
-            help_text = "The Capital is MORE than 4 but LESS than 8 letters long!"
+        elif capital_length <= self.median:
+            help_text = f"The Capital is at LEAST / LESS than {median} letters long!"
 
         self.help_text_label = Label(self.help_frame, bg=background,
                                      text=help_text, wraplength=350,
@@ -489,6 +531,8 @@ class Hints:
         # Put help button back to normal...
         partner.hints_button.config(state=NORMAL)
         self.help_box.destroy()
+
+# displays the whole quiz as a separate window
 
 if __name__ == "__main__":
     root = Tk()
